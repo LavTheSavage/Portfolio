@@ -287,10 +287,8 @@ if (mode === 'chill') {
   }
 }
 
-// Set current year in footer
-document.querySelectorAll('#year').forEach(el => {
-  el.textContent = new Date().getFullYear();
-});
+const yearEl = document.getElementById('year');
+if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 // Mark active nav link
 const currentPage = window.location.pathname.split('/').pop() || 'index.html';
@@ -315,3 +313,7 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.08 });
 
 revealEls.forEach(el => observer.observe(el));
+
+window.addEventListener('scroll', () => {
+  document.body.classList.toggle('scrolled', window.scrollY > 10);
+});
