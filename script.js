@@ -81,12 +81,18 @@ if (typeof IntersectionObserver !== 'undefined' && revealEls.length > 0) {
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.08 });
+  }, { threshold: 0, rootMargin: '0px 0px -5% 0px' });
 
   revealEls.forEach(el => observer.observe(el));
-}
 
-// Toggle scrolled header style when scroll position changes
-window.addEventListener('scroll', () => {
-  document.body.classList.toggle('scrolled', window.scrollY > 10);
-});
+  // Failsafe: force-reveal anything the observer misses (covers
+  // JS errors elsewhere, unusual viewport/layout timing, etc.)
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      revealEls.forEach(el => el.classList.add('revealed'));
+    }, 1000);
+  });
+} else if (revealEls.length > 0) {
+  // No IntersectionObserver support: just show everything
+  revealEls.forEach(el => el.classList.add('revealed'));
+}
